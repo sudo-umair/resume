@@ -1,0 +1,47 @@
+name: Build résumé
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TECTONIC_VERSION: 0.17.0
+    steps:
+      - uses: actions/checkout@v4
+
+      # Same pinned version as local builds, from the official GitHub release.
+      - name: Install Tectonic
+        run: |
+          curl -fsSL "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%40${TECTONIC_VERSION}/tectonic-${TECTONIC_VERSION}-x86_64-unknown-linux-musl.tar.gz" \
+            | tar -xz -C /usr/local/bin tectonic
+          tectonic --version
+
+      - name: Cache LaTeX packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/Tectonic
+          key: tectonic-${{ env.TECTONIC_VERSION }}-${{ hashFiles('Tectonic.toml', 'src/_preamble.tex') }}
+          restore-keys: tectonic-${{ env.TECTONIC_VERSION }}-
+
+      - name: Build PDF
+        run: tectonic -X build --keep-logs
+
+      - name: Check it is one page
+        run: |
+          pages=$(grep -o '([0-9]* page' build/muhammad-umair-resume/muhammad-umair-resume.log | grep -o '[0-9]*')
+          echo "Pages: $pages"
+          test "$pages" = "1" || { echo "::error::The résumé is $pages pages; it must fit on one."; exit 1; }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: muhammad-umair-resume
+          path: build/muhammad-umair-resume/muhammad-umair-resume.pdf
