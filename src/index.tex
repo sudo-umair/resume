@@ -37,3 +37,38 @@ from real-time AI avatar calls to React Native on custom medical hardware. Open 
 \begin{itemize}
   \item Delivered 15+ web and mobile apps for clients across industries, from APIs to React and React Native frontends.
 \end{itemize}
+
+% --- Projects -----------------------------------------------------------
+\section{Projects}
+\project{Beyond Presence}{Full stack engineer}
+  {React, TypeScript, TanStack Query, Zustand, LiveKit / WebRTC, Storybook, Playwright}
+  {\href{https://umair-dev.vercel.app/work/beyond-presence}{umair-dev.vercel.app/work/beyond-presence}}
+\begin{itemize}
+  \item Built the dashboard and agent-creation flows for hyper-realistic AI video agents, and live avatar calls over LiveKit (WebRTC) with in-call controls.
+  \item Created a reusable component library in Storybook and a Playwright suite with 90\%+ coverage.
+\end{itemize}
+
+\project{cureVision}{Lead React Native developer}
+  {React Native, TypeScript, Java native modules, TensorFlow Lite, Redux}
+  {\href{https://umair-dev.vercel.app/work/curevision}{umair-dev.vercel.app/work/curevision}}
+\begin{itemize}
+  \item Led the React Native app on an MDR-certified handheld wound scanner, with Java native modules driving its depth camera, custom flash and temperature sensor through the vendor SDK.
+  \item Kept the depth pipeline fast by downsampling across the bridge and moving heavy work to native code; built the 3D view, wound measurements and offline-first sync with chunked, retried uploads.
+\end{itemize}
+
+\project{SalatHub}{Lead developer}
+  {React 19, TypeScript, Supabase (Postgres, RLS, Realtime, Edge Functions), Expo, react-native-tvos, EAS}
+  {\href{https://umair-dev.vercel.app/work/salathub}{umair-dev.vercel.app/work/salathub}}
+\begin{itemize}
+  \item Mosque platform with four clients on one Supabase backend: an admin console, browser displays, and two Google Play apps, SalatHub TV (Android TV) and the Alkhairia mobile app.
+  \item Locked displays down to screen-code SECURITY DEFINER functions, kept them live with a content-free realtime revision counter, and shared one prayer engine between the browser and Deno edge functions.
+  \item Ended false prayer-time alerts by diffing settings, not cached times; built TV D-pad focus and hourly OTA.
+\end{itemize}
+
+\project{Mailcamp}{Sole developer}
+  {React 19, TanStack Query, Express 5 on Bun, Prisma, PostgreSQL, Postal, Stripe, AWS}
+  {\href{https://umair-dev.vercel.app/work/mailcamp}{umair-dev.vercel.app/work/mailcamp}}
+\begin{itemize}
+  \item Email platform with campaign sending coordinated in Postgres alone (atomic claims, lease renewal), no queue.
+  \item Race-free quotas via advisory locks, HMAC-signed tracking links and idempotent Stripe and Postal webhooks.
+\end{itemize}
