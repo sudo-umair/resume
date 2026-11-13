@@ -1,0 +1,13 @@
+[doc]
+name = "resume"
+bundle = "https://data1b.fullyjustified.net/tlextras-2022.0r0.tar"
+
+# Build with: tectonic -X build   ->   build/muhammad-umair-resume/muhammad-umair-resume.pdf
+[[output]]
+name = "muhammad-umair-resume"
+type = "pdf"
+inputs = [
+    "_preamble.tex",
+    "index.tex",
+    "_postamble.tex",
+]
