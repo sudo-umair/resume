@@ -45,3 +45,31 @@ jobs:
         with:
           name: muhammad-umair-resume
           path: build/muhammad-umair-resume/muhammad-umair-resume.pdf
+
+  # Publish the PDF to one rolling release with a stable download URL:
+  # https://github.com/sudo-umair/resume/releases/download/resume/muhammad-umair-resume.pdf
+  # The portfolio's sync workflow picks it up from there.
+  publish:
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: resume
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: muhammad-umair-resume
+
+      - name: Update the rolling release
+        run: |
+          notes="Built from ${GITHUB_SHA::7} by run #${GITHUB_RUN_NUMBER}."
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --notes "$notes"
+          else
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "Latest résumé" --notes "$notes" --latest
+          fi
+          gh release upload "$TAG" muhammad-umair-resume.pdf --repo "$GITHUB_REPOSITORY" --clobber
