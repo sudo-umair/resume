@@ -17,6 +17,14 @@ jobs:
       TECTONIC_VERSION: 0.17.0
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history, to date the last content change
+
+      # Reproducible PDFs: stamp the build with the time of the last commit
+      # that changed the résumé itself, so identical content gives an
+      # identical file and the portfolio sync only commits real changes.
+      - name: Pin the build timestamp
+        run: echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct -- src Tectonic.toml)" >> "$GITHUB_ENV"
 
       # Same pinned version as local builds, from the official GitHub release.
       - name: Install Tectonic
