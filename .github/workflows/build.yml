@@ -67,6 +67,8 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       TAG: resume
+      # Job-level so the step's `if` can see it (a step's own env isn't visible to its `if`).
+      PORTFOLIO_SYNC_TOKEN: ${{ secrets.PORTFOLIO_SYNC_TOKEN }}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -81,3 +83,10 @@ jobs:
             gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "Latest résumé" --notes "$notes" --latest
           fi
           gh release upload "$TAG" muhammad-umair-resume.pdf --repo "$GITHUB_REPOSITORY" --clobber
+
+      # Start the portfolio's sync right away instead of waiting for its
+      # schedule. Needs PORTFOLIO_SYNC_TOKEN: a fine-grained token limited to
+      # sudo-umair/portfolio with "Actions: read and write". Skipped if unset.
+      - name: Trigger the portfolio sync
+        if: env.PORTFOLIO_SYNC_TOKEN != ''
+        run: GH_TOKEN="$PORTFOLIO_SYNC_TOKEN" gh workflow run sync-resume.yml --repo sudo-umair/portfolio --ref main
